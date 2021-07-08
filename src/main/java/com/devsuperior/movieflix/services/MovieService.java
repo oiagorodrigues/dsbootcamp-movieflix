@@ -1,6 +1,7 @@
 package com.devsuperior.movieflix.services;
 
 import com.devsuperior.movieflix.dto.MovieDTO;
+import com.devsuperior.movieflix.dto.ReviewDTO;
 import com.devsuperior.movieflix.entities.Genre;
 import com.devsuperior.movieflix.entities.Movie;
 import com.devsuperior.movieflix.repositories.GenreRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,5 +37,11 @@ public class MovieService {
         Optional<Movie> movieOptional = repository.findById(id);
         return movieOptional.map(MovieDTO::new)
                 .orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewDTO> findMovieReviews(Long id) {
+        Movie movie = repository.getOne(id);
+        return repository.findMovieReviews(movie);
     }
 }
